@@ -9,12 +9,17 @@
 /* Begin PBXBuildFile section */
 		6E7152D8245CB8B20011ABDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D7245CB8B20011ABDB /* AppDelegate.swift */; };
 		6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */; };
-		6E7152DC245CB8B20011ABDB /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DB245CB8B20011ABDB /* MasterViewController.swift */; };
-		6E7152DE245CB8B20011ABDB /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DD245CB8B20011ABDB /* DetailViewController.swift */; };
-		6E7152E1245CB8B20011ABDB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7152DF245CB8B20011ABDB /* Main.storyboard */; };
+		6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DB245CB8B20011ABDB /* FeedViewController.swift */; };
+		6E7152DE245CB8B20011ABDB /* FeedItemlViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DD245CB8B20011ABDB /* FeedItemlViewController.swift */; };
+		6E7152E1245CB8B20011ABDB /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7152DF245CB8B20011ABDB /* Feed.storyboard */; };
 		6E7152E3245CB8B40011ABDB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6E7152E2245CB8B40011ABDB /* Assets.xcassets */; };
 		6E7152E6245CB8B40011ABDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E7152E4245CB8B40011ABDB /* LaunchScreen.storyboard */; };
 		6E7152F1245CB8B40011ABDB /* RedditFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152F0245CB8B40011ABDB /* RedditFeedTests.swift */; };
+		6E7152FF245CBB800011ABDB /* FeedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152FE245CBB800011ABDB /* FeedCoordinator.swift */; };
+		6E715302245CBCBA0011ABDB /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715301245CBCBA0011ABDB /* FeedViewModel.swift */; };
+		6E715304245CC8560011ABDB /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715303245CC8560011ABDB /* Coordinator.swift */; };
+		6E715308245CDBB90011ABDB /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715307245CDBB90011ABDB /* DependencyContainer.swift */; };
+		6E71530A245CE2F00011ABDB /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715309245CE2F00011ABDB /* FeedCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,15 +36,20 @@
 		6E7152D4245CB8B20011ABDB /* RedditFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedditFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7152D7245CB8B20011ABDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		6E7152DB245CB8B20011ABDB /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		6E7152DD245CB8B20011ABDB /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		6E7152E0245CB8B20011ABDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6E7152DB245CB8B20011ABDB /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		6E7152DD245CB8B20011ABDB /* FeedItemlViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemlViewController.swift; sourceTree = "<group>"; };
+		6E7152E0245CB8B20011ABDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Feed.storyboard; sourceTree = "<group>"; };
 		6E7152E2245CB8B40011ABDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6E7152E5245CB8B40011ABDB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6E7152E7245CB8B40011ABDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E7152EC245CB8B40011ABDB /* RedditFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedditFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7152F0245CB8B40011ABDB /* RedditFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditFeedTests.swift; sourceTree = "<group>"; };
 		6E7152F2245CB8B40011ABDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6E7152FE245CBB800011ABDB /* FeedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCoordinator.swift; sourceTree = "<group>"; };
+		6E715301245CBCBA0011ABDB /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
+		6E715303245CC8560011ABDB /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		6E715307245CDBB90011ABDB /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+		6E715309245CE2F00011ABDB /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +73,7 @@
 		6E7152CB245CB8B20011ABDB = {
 			isa = PBXGroup;
 			children = (
+				6E715300245CBB980011ABDB /* MEKit */,
 				6E7152D6245CB8B20011ABDB /* RedditFeed */,
 				6E7152EF245CB8B40011ABDB /* RedditFeedTests */,
 				6E7152D5245CB8B20011ABDB /* Products */,
@@ -81,14 +92,13 @@
 		6E7152D6245CB8B20011ABDB /* RedditFeed */ = {
 			isa = PBXGroup;
 			children = (
+				6E7152FB245CB9D10011ABDB /* Modules */,
 				6E7152D7245CB8B20011ABDB /* AppDelegate.swift */,
 				6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */,
-				6E7152DB245CB8B20011ABDB /* MasterViewController.swift */,
-				6E7152DD245CB8B20011ABDB /* DetailViewController.swift */,
-				6E7152DF245CB8B20011ABDB /* Main.storyboard */,
 				6E7152E2245CB8B40011ABDB /* Assets.xcassets */,
 				6E7152E4245CB8B40011ABDB /* LaunchScreen.storyboard */,
 				6E7152E7245CB8B40011ABDB /* Info.plist */,
+				6E715307245CDBB90011ABDB /* DependencyContainer.swift */,
 			);
 			path = RedditFeed;
 			sourceTree = "<group>";
@@ -100,6 +110,35 @@
 				6E7152F2245CB8B40011ABDB /* Info.plist */,
 			);
 			path = RedditFeedTests;
+			sourceTree = "<group>";
+		};
+		6E7152FB245CB9D10011ABDB /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				6E7152FC245CB9DA0011ABDB /* Feed */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		6E7152FC245CB9DA0011ABDB /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				6E7152DF245CB8B20011ABDB /* Feed.storyboard */,
+				6E7152FE245CBB800011ABDB /* FeedCoordinator.swift */,
+				6E715301245CBCBA0011ABDB /* FeedViewModel.swift */,
+				6E7152DB245CB8B20011ABDB /* FeedViewController.swift */,
+				6E715309245CE2F00011ABDB /* FeedCell.swift */,
+				6E7152DD245CB8B20011ABDB /* FeedItemlViewController.swift */,
+			);
+			name = Feed;
+			sourceTree = "<group>";
+		};
+		6E715300245CBB980011ABDB /* MEKit */ = {
+			isa = PBXGroup;
+			children = (
+				6E715303245CC8560011ABDB /* Coordinator.swift */,
+			);
+			path = MEKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,7 +224,7 @@
 			files = (
 				6E7152E6245CB8B40011ABDB /* LaunchScreen.storyboard in Resources */,
 				6E7152E3245CB8B40011ABDB /* Assets.xcassets in Resources */,
-				6E7152E1245CB8B20011ABDB /* Main.storyboard in Resources */,
+				6E7152E1245CB8B20011ABDB /* Feed.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,10 +242,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E7152FF245CBB800011ABDB /* FeedCoordinator.swift in Sources */,
+				6E71530A245CE2F00011ABDB /* FeedCell.swift in Sources */,
 				6E7152D8245CB8B20011ABDB /* AppDelegate.swift in Sources */,
+				6E715302245CBCBA0011ABDB /* FeedViewModel.swift in Sources */,
 				6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */,
-				6E7152DC245CB8B20011ABDB /* MasterViewController.swift in Sources */,
-				6E7152DE245CB8B20011ABDB /* DetailViewController.swift in Sources */,
+				6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */,
+				6E7152DE245CB8B20011ABDB /* FeedItemlViewController.swift in Sources */,
+				6E715308245CDBB90011ABDB /* DependencyContainer.swift in Sources */,
+				6E715304245CC8560011ABDB /* Coordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,12 +273,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6E7152DF245CB8B20011ABDB /* Main.storyboard */ = {
+		6E7152DF245CB8B20011ABDB /* Feed.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				6E7152E0245CB8B20011ABDB /* Base */,
 			);
-			name = Main.storyboard;
+			name = Feed.storyboard;
 			sourceTree = "<group>";
 		};
 		6E7152E4245CB8B40011ABDB /* LaunchScreen.storyboard */ = {
