@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E003EB3245F152E002A3010 /* TableViewLoadNextPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EB2245F152E002A3010 /* TableViewLoadNextPageView.swift */; };
+		6E003EB5245F1536002A3010 /* MessagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EB4245F1536002A3010 /* MessagePresenter.swift */; };
+		6E003EB8245F153E002A3010 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EB6245F153E002A3010 /* APIService.swift */; };
+		6E003EB9245F153E002A3010 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EB7245F153E002A3010 /* DownloadService.swift */; };
+		6E003EBC245F154C002A3010 /* FileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EBA245F154C002A3010 /* FileSystemHelper.swift */; };
+		6E003EBD245F154C002A3010 /* URL+sha256Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EBB245F154C002A3010 /* URL+sha256Hash.swift */; };
+		6E003EC2245F1590002A3010 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC1245F1590002A3010 /* AsyncOperation.swift */; };
+		6E003EC4245F15A8002A3010 /* UIImageView+Remote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC3245F15A8002A3010 /* UIImageView+Remote.swift */; };
+		6E003EC7245F15D8002A3010 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC6245F15D8002A3010 /* Formatter.swift */; };
 		6E7152D8245CB8B20011ABDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D7245CB8B20011ABDB /* AppDelegate.swift */; };
 		6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */; };
 		6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DB245CB8B20011ABDB /* FeedViewController.swift */; };
@@ -33,6 +42,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6E003EB2245F152E002A3010 /* TableViewLoadNextPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewLoadNextPageView.swift; sourceTree = "<group>"; };
+		6E003EB4245F1536002A3010 /* MessagePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePresenter.swift; sourceTree = "<group>"; };
+		6E003EB6245F153E002A3010 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		6E003EB7245F153E002A3010 /* DownloadService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
+		6E003EBA245F154C002A3010 /* FileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelper.swift; sourceTree = "<group>"; };
+		6E003EBB245F154C002A3010 /* URL+sha256Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+sha256Hash.swift"; sourceTree = "<group>"; };
+		6E003EC1245F1590002A3010 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		6E003EC3245F15A8002A3010 /* UIImageView+Remote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Remote.swift"; sourceTree = "<group>"; };
+		6E003EC6245F15D8002A3010 /* Formatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		6E7152D4245CB8B20011ABDB /* RedditFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedditFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7152D7245CB8B20011ABDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +88,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6E003EBE245F1553002A3010 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				6E003EC6245F15D8002A3010 /* Formatter.swift */,
+				6E003EBA245F154C002A3010 /* FileSystemHelper.swift */,
+				6E003EC1245F1590002A3010 /* AsyncOperation.swift */,
+				6E715303245CC8560011ABDB /* Coordinator.swift */,
+				6E003EBB245F154C002A3010 /* URL+sha256Hash.swift */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		6E003EBF245F155A002A3010 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				6E003EB6245F153E002A3010 /* APIService.swift */,
+				6E003EB7245F153E002A3010 /* DownloadService.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		6E003EC0245F1563002A3010 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				6E003EB4245F1536002A3010 /* MessagePresenter.swift */,
+				6E003EB2245F152E002A3010 /* TableViewLoadNextPageView.swift */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		6E003EC5245F15BD002A3010 /* UIImageView+Remote */ = {
+			isa = PBXGroup;
+			children = (
+				6E003EC3245F15A8002A3010 /* UIImageView+Remote.swift */,
+			);
+			name = "UIImageView+Remote";
+			sourceTree = "<group>";
+		};
 		6E7152CB245CB8B20011ABDB = {
 			isa = PBXGroup;
 			children = (
@@ -136,7 +192,10 @@
 		6E715300245CBB980011ABDB /* MEKit */ = {
 			isa = PBXGroup;
 			children = (
-				6E715303245CC8560011ABDB /* Coordinator.swift */,
+				6E003EC5245F15BD002A3010 /* UIImageView+Remote */,
+				6E003EC0245F1563002A3010 /* UI */,
+				6E003EBF245F155A002A3010 /* Networking */,
+				6E003EBE245F1553002A3010 /* Common */,
 			);
 			path = MEKit;
 			sourceTree = "<group>";
@@ -242,14 +301,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E003EBC245F154C002A3010 /* FileSystemHelper.swift in Sources */,
+				6E003EC4245F15A8002A3010 /* UIImageView+Remote.swift in Sources */,
 				6E7152FF245CBB800011ABDB /* FeedCoordinator.swift in Sources */,
 				6E71530A245CE2F00011ABDB /* FeedCell.swift in Sources */,
 				6E7152D8245CB8B20011ABDB /* AppDelegate.swift in Sources */,
 				6E715302245CBCBA0011ABDB /* FeedViewModel.swift in Sources */,
 				6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */,
 				6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */,
+				6E003EB3245F152E002A3010 /* TableViewLoadNextPageView.swift in Sources */,
 				6E7152DE245CB8B20011ABDB /* FeedItemlViewController.swift in Sources */,
 				6E715308245CDBB90011ABDB /* DependencyContainer.swift in Sources */,
+				6E003EB9245F153E002A3010 /* DownloadService.swift in Sources */,
+				6E003EC7245F15D8002A3010 /* Formatter.swift in Sources */,
+				6E003EBD245F154C002A3010 /* URL+sha256Hash.swift in Sources */,
+				6E003EB5245F1536002A3010 /* MessagePresenter.swift in Sources */,
+				6E003EB8245F153E002A3010 /* APIService.swift in Sources */,
+				6E003EC2245F1590002A3010 /* AsyncOperation.swift in Sources */,
 				6E715304245CC8560011ABDB /* Coordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

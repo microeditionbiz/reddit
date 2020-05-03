@@ -33,12 +33,14 @@ class FeedCoordinator: Coordinator {
         let feedNavController = UINavigationController(rootViewController: feedViewController)
         
         let feedItemViewController = storyboard.instantiateViewController(identifier: String(describing: FeedItemViewController.self)) as! FeedItemViewController
-        let feedItemNavController = UINavigationController(rootViewController: feedItemViewController)
         feedItemViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
         feedItemViewController.navigationItem.leftItemsSupplementBackButton = true
+       
+        let feedItemNavController = UINavigationController(rootViewController: feedItemViewController)
         
         splitViewController.viewControllers = [feedNavController, feedItemNavController]
-        
+        splitViewController.preferredDisplayMode = .allVisible
+      
         self.feedViewController = feedViewController
         self.feedNavController = feedNavController
         self.feedItemViewController = feedItemViewController
