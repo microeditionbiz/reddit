@@ -8,13 +8,9 @@
 
 import Foundation
 
-public struct APIServiceConfiguration {
-    private init() { }
-    static var dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .formatted(Formatter.dateFormatter)
-}
-
 enum APIServiceError: Error {
     case noData
+    case invalidData
 }
 
 protocol APIRequestProtocol {
@@ -43,26 +39,6 @@ enum APIHTTPMethod: String {
 
 protocol APIResponseBase {
     init(_ data: Data) throws
-}
-
-struct APIResponse<DataType: Decodable>: APIResponseBase {
-    var value: DataType?
-    
-    init(_ data: Data) throws {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = APIServiceConfiguration.dateDecodingStrategy
-        value = try decoder.decode(DataType.self, from: data)
-    }
-}
-
-struct APICollectionResponse<DataType: Decodable>: APIResponseBase {
-    var values: [DataType]?
-    
-    init(_ data: Data) throws {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = APIServiceConfiguration.dateDecodingStrategy
-        values = try decoder.decode([DataType].self, from: data)
-    }
 }
 
 protocol APIEndpoint {
@@ -113,11 +89,6 @@ extension APIEndpoint {
         
         return request
     }
-}
-
-protocol APIPagedEndpoint: APIEndpoint {
-    var page: Int {get set}
-    var pageSize: Int {get}
 }
 
 protocol APIServiceProtocol {

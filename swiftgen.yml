@@ -1,0 +1,7 @@
+coredata:
+  inputs: RedditFeed/RedditFeed.xcdatamodeld
+  outputs:
+    templatePath: CoreData.stencil
+    output: RedditFeed/CoreData.swift
+    params:
+      generateObjcName: true

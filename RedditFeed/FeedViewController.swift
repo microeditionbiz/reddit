@@ -12,16 +12,21 @@ protocol FeedViewControllerDelegate: AnyObject {
     func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModelProtocol)
 }
 
-class FeedViewController: UIViewController {
+class FeedViewController: UIViewController, MessagePresenter {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var viewModel: FeedViewModelProtocol!
+    var viewModel: FeedViewModelProtocol! {
+        didSet {
+            viewModel.delegate = self
+        }
+    }
+    
     weak var delegate: FeedViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        viewModel.fetch()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -32,6 +37,21 @@ class FeedViewController: UIViewController {
     }
 
 }
+
+// MARK: - FeedViewModelDelegate
+
+extension FeedViewController: FeedViewModelDelegate {
+    
+    func update(viewModel: FeedViewModelProtocol) {
+        tableView.reloadData()
+    }
+    
+    func updateError(viewModel: FeedViewModelProtocol, error: Error) {
+        presentAlert(withError: error)
+    }
+    
+}
+
 
 // MARK: - UITableViewDataSource
 
