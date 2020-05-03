@@ -86,6 +86,8 @@ protocol FeedItemViewModelProtocol {
     var thumbnail: URL? {get}
     var comments: String {get}
     var unread: Bool {get}
+    var mainContent: URL? {get}
+    var hasImage: Bool {get}
 }
 
 struct FeedItemViewModel: FeedItemViewModelProtocol {
@@ -95,6 +97,8 @@ struct FeedItemViewModel: FeedItemViewModelProtocol {
     let thumbnail: URL?
     let comments: String
     let unread: Bool
+    let mainContent: URL?
+    let hasImage: Bool
     
     var details: String {
         var details = ""
@@ -123,6 +127,14 @@ struct FeedItemViewModel: FeedItemViewModelProtocol {
         self.unread = feedItem.unread
         
         self.comments = String(format: "%d %@", feedItem.commentsCount, NSLocalizedString("Comments", comment: ""))
+        
+        self.mainContent = feedItem.url
+        
+        if let postHint = feedItem.postHint, postHint == "image" {
+            self.hasImage = postHint == "image"
+        } else {
+            self.hasImage = false
+        }
     }
 
 }

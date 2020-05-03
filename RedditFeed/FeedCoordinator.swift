@@ -13,10 +13,10 @@ class FeedCoordinator: Coordinator {
     let ctx: Context
     
     weak var splitViewController: UISplitViewController!
-    weak var feedViewController: FeedViewController!
-    weak var feedNavController: UINavigationController!
-    weak var feedItemViewController: FeedItemViewController!
+    weak var feedItemViewController: FeedItemWebViewViewController!
     weak var feedItemNavController: UINavigationController!
+    
+    var storyboard: UIStoryboard { UIStoryboard(name: "Feed", bundle: nil) }
     
     init(context: Context, splitViewController: UISplitViewController) {
         self.ctx = context
@@ -25,27 +25,42 @@ class FeedCoordinator: Coordinator {
     }
     
     func start(animated: Bool) {
-        let storyboard = UIStoryboard(name: "Feed", bundle: nil)
-       
-        let feedViewController = storyboard.instantiateViewController(identifier: String(describing: FeedViewController.self)) as! FeedViewController
-        feedViewController.delegate = self
-        feedViewController.viewModel = ctx.newFeedViewModel()
-        let feedNavController = UINavigationController(rootViewController: feedViewController)
-        
-        let feedItemViewController = storyboard.instantiateViewController(identifier: String(describing: FeedItemViewController.self)) as! FeedItemViewController
-        feedItemViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-        feedItemViewController.navigationItem.leftItemsSupplementBackButton = true
-       
-        let feedItemNavController = UINavigationController(rootViewController: feedItemViewController)
-        
-        splitViewController.viewControllers = [feedNavController, feedItemNavController]
+        splitViewController.viewControllers = [
+            createFeedVC(),
+            createFeedItemVC(withViewModel: nil)
+        ]
         splitViewController.preferredDisplayMode = .allVisible
-      
-        self.feedViewController = feedViewController
-        self.feedNavController = feedNavController
-        self.feedItemViewController = feedItemViewController
-        self.feedItemNavController = feedItemNavController
     }
+
+    func createFeedVC() -> UINavigationController {
+        let feedViewController = storyboard.instantiateViewController(identifier: String(describing: FeedViewController.self)) as! FeedViewController
+             feedViewController.delegate = self
+             feedViewController.viewModel = ctx.newFeedViewModel()
+        return UINavigationController(rootViewController: feedViewController)
+    }
+    
+    func createFeedItemVC(withViewModel viewModel: FeedItemViewModelProtocol?) -> UINavigationController {
+        var vc: UIViewController!
+        
+        if let viewModel = viewModel {
+            if viewModel.hasImage {
+                let feedItemVC = storyboard.instantiateViewController(identifier: String(describing: FeedItemImageViewController.self)) as! FeedItemImageViewController
+                feedItemVC.viewModel = viewModel
+                vc = feedItemVC
+            } else {
+                let feedItemVC = storyboard.instantiateViewController(identifier: String(describing: FeedItemWebViewViewController.self)) as! FeedItemWebViewViewController
+                feedItemVC.viewModel = viewModel
+                vc = feedItemVC
+            }
+        } else {
+            vc = storyboard.instantiateViewController(identifier: String(describing: FeedItemEmptyViewController.self)) as! FeedItemEmptyViewController
+        }
+            
+         vc.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+         vc.navigationItem.leftItemsSupplementBackButton = true
+        
+         return UINavigationController(rootViewController: vc)
+     }
     
 }
 
@@ -54,8 +69,7 @@ class FeedCoordinator: Coordinator {
 extension FeedCoordinator: FeedViewControllerDelegate {
     
     func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModelProtocol) {
-        feedItemViewController.viewModel = feedItem
-        splitViewController.showDetailViewController(feedItemNavController, sender: self)
+        splitViewController.showDetailViewController(createFeedItemVC(withViewModel: feedItem), sender: self)
     }
     
 }
@@ -65,7 +79,10 @@ extension FeedCoordinator: FeedViewControllerDelegate {
 extension FeedCoordinator: UISplitViewControllerDelegate {
         
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-        return feedItemViewController.viewModel == nil
+        guard let navController = secondaryViewController as? UINavigationController, let _ = navController.topViewController as? FeedItemEmptyViewController else {
+            return false
+        }
+        return true
     }
     
 }
