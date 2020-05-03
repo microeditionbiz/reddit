@@ -13,8 +13,8 @@ internal class FeedItem: NSManagedObject {
     return Self.fetchRequest(resultOf: FeedItem.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize)
   }
 
-  @nonobjc internal static func fetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [FeedItem] {
-    return Self.fetchObjects(FeedItem.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context) ?? []
+  @nonobjc internal static func fetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [FeedItem]? {
+    return Self.fetchObjects(FeedItem.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context)
   }
 
   @discardableResult @nonobjc internal static func asyncFetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext, completion: @escaping ([FeedItem]?)->()) -> NSPersistentStoreAsynchronousResult? {

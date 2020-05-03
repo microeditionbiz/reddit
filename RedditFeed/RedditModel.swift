@@ -13,10 +13,14 @@ typealias Payload = [String: Any]
 typealias List = [Payload]
 
 struct TopResponse: APIResponseBase {
+    fileprivate(set) var afterIdentifier: String?
+    
     init(_ data: Data) throws {
         guard let payload = try JSONSerialization.jsonObject(with: data) as? Payload , let dataPayload = payload["data"] as? Payload, let childrenList = dataPayload["children"] as? List else {
             throw APIServiceError.invalidData
         }
+        
+        self.afterIdentifier = dataPayload["after"] as? String
         
         let context = CoreDataManager.newBackgroundContext()
         childrenList.forEach { childPayload in
@@ -50,7 +54,7 @@ extension FeedItem: NSManagedObjectDictionaryMapping {
             self.createdAt = nil
         }
         
-        if let identifier = dictionary["id"] as? String {
+        if let identifier = dictionary["name"] as? String {
             self.identifier = identifier
         } else {
             assertionFailure("Item without identifier")

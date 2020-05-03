@@ -38,19 +38,37 @@ class FeedViewModel: FeedViewModelProtocol  {
     let ctx: Context
     
     weak var delegate: FeedViewModelDelegate?
-    var items: [FeedItemViewModelProtocol]
+    weak var currentFetchRequest: APIRequestProtocol?
+    
+    var items: [FeedItemViewModelProtocol] = []
+    var afterIdentifier: String?
     
     init(context: Context) {
         self.ctx = context
-        self.items = []
     }
     
     func fetch() {
-        let endpoint = RedditAPI.Top(afterIdentifier: nil, beforeIdentifier: nil)
-        ctx.apiService.load(endpoint: endpoint) { result in
+        currentFetchRequest?.cancel()
+        fetch(afterIdentifier: nil)
+    }
+    
+    func fetchNextPage() {
+        guard currentFetchRequest == nil else { return }
+        fetch(afterIdentifier: afterIdentifier)
+    }
+    
+    fileprivate func fetch(afterIdentifier: String?) {
+        let endpoint = RedditAPI.Top(afterIdentifier: afterIdentifier)
+        currentFetchRequest = ctx.apiService.load(endpoint: endpoint) { result in
+            self.currentFetchRequest = nil
             switch result {
-            case .success:
-                self.items = FeedItem.fetchObjects(in: CoreDataManager.viewContex).map(FeedItemViewModel.init)
+            case .success(let response):
+                self.afterIdentifier = response.afterIdentifier
+                if let newItems = FeedItem.fetchObjects(in: CoreDataManager.viewContex) {
+                    self.items = newItems.map(FeedItemViewModel.init)
+                } else {
+                    self.items.removeAll()
+                }
                 self.delegate?.update(viewModel: self)
             case .failure(let error):
                 self.delegate?.updateError(viewModel: self, error: error)
@@ -58,37 +76,53 @@ class FeedViewModel: FeedViewModelProtocol  {
         }
     }
     
-    func fetchNextPage() {
-        // TODO: implement
-    }
 }
 
 // MARK: - Feed Item
 
 protocol FeedItemViewModelProtocol {
-    var title: String? {get}
-    var author: String? {get}
-    var entryDate: String? {get}
+    var title: String {get}
+    var details: String {get}
     var thumbnail: URL? {get}
-    var numberOfComments: String {get}
+    var comments: String {get}
     var unread: Bool {get}
 }
 
 struct FeedItemViewModel: FeedItemViewModelProtocol {
-    let title: String?
-    let author: String?
-    let entryDate: String?
+    let feedItem: FeedItem
+    
+    let title: String
     let thumbnail: URL?
-    let numberOfComments: String
+    let comments: String
     let unread: Bool
     
+    var details: String {
+        var details = ""
+        if let author = feedItem.author {
+            details += String(format: "%@ %@", NSLocalizedString("Posted by", comment: ""), author)
+        }
+        
+        if let createdAt = feedItem.createdAt {
+            details += " \(createdAt.pastDateDescription)"
+        }
+        
+        return details
+    }
+
     init(feedItem: FeedItem) {
-        self.title = feedItem.title
-        self.author = feedItem.author
-        self.thumbnail = feedItem.thumbnail
-        self.entryDate = feedItem.createdAt?.pastDateDescription
-        self.numberOfComments = feedItem.commentsCount == 0 ? "" : "\(feedItem.commentsCount)"
+        self.feedItem = feedItem
+        
+        self.title = feedItem.title ?? ""
+        
+        if let thumbnail = feedItem.thumbnail, thumbnail.absoluteString.hasPrefix("http") {
+            self.thumbnail = thumbnail
+        } else {
+            self.thumbnail = nil
+        }
+        
         self.unread = feedItem.unread
+        
+        self.comments = String(format: "%d %@", feedItem.commentsCount, NSLocalizedString("Comments", comment: ""))
     }
 
 }

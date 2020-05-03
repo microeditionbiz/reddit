@@ -13,8 +13,10 @@ protocol FeedViewControllerDelegate: AnyObject {
 }
 
 class FeedViewController: UIViewController, MessagePresenter {
-
+    static let loadNextPageViewHeight: CGFloat = 44
+    
     @IBOutlet weak var tableView: UITableView!
+    weak var loadNextPageView: TableViewLoadNextPageView!
     
     var viewModel: FeedViewModelProtocol! {
         didSet {
@@ -26,6 +28,9 @@ class FeedViewController: UIViewController, MessagePresenter {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureLoadNextPageView()
+        configureRefreshControl()
+        
         viewModel.fetch()
     }
 
@@ -34,6 +39,24 @@ class FeedViewController: UIViewController, MessagePresenter {
             tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
         super.viewWillAppear(animated)
+    }
+    
+    fileprivate func configureLoadNextPageView() {
+        let loadNextPageView = TableViewLoadNextPageView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: Self.loadNextPageViewHeight))
+        loadNextPageView.isAnimating = true
+        tableView.tableFooterView = loadNextPageView
+        self.loadNextPageView = loadNextPageView
+    }
+    
+    fileprivate func configureRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: .valueChanged)
+        
+        tableView.refreshControl = refreshControl
+    }
+    
+    @objc func refreshControlAction(_ sender: AnyObject) {
+        viewModel.fetch()
     }
 
 }
@@ -63,7 +86,7 @@ extension FeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FeedCell.self), for: indexPath) as! FeedCell
-        cell.textLabel!.text = viewModel.items[indexPath.row].title
+        cell.configure(with: viewModel.items[indexPath.row])
         return cell
     }
  
@@ -87,9 +110,33 @@ extension FeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = viewModel.items[indexPath.row]
         delegate?.selectAction(viewController: self, feedItem: item)
-//        controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-//        controller.navigationItem.leftItemsSupplementBackButton = true
     }
 
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension FeedViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            scrollViewDidEndScrolling(scrollView)
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        scrollViewDidEndScrolling(scrollView)
+    }
+    
+    func scrollViewDidEndScrolling(_ scrollView: UIScrollView) {
+        let visibleHeight = scrollView.frame.size.height - scrollView.contentInset.bottom
+            
+        let isLoadNextPageAreaVisible = visibleHeight >= (scrollView.contentSize.height - Self.loadNextPageViewHeight - scrollView.contentOffset.y)
+            
+        if isLoadNextPageAreaVisible {
+            viewModel.fetchNextPage()
+        }
+    }
+    
 }
 

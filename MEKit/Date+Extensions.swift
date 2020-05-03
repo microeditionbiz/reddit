@@ -27,7 +27,7 @@ extension Date {
             if minutesAgo < minutesPerHour {
                 return (minutesAgo == 1 ?
                     String(format: "%.0f %@", minutesAgo, NSLocalizedString("minute ago", comment: "")) :
-                    String(format: "%.0f minutes ago", minutesAgo, NSLocalizedString("minutes ago", comment: "")))
+                    String(format: "%.0f %@", minutesAgo, NSLocalizedString("minutes ago", comment: "")))
             } else {
                 let hoursAgo = floor(minutesAgo / minutesPerHour)
                 let hoursPerDay = TimeInterval(24.0)
@@ -35,7 +35,7 @@ extension Date {
                 if hoursAgo < hoursPerDay {
                     return (hoursAgo == 1 ?
                         String(format: "%.0f %@", hoursAgo, NSLocalizedString("hour ago", comment: "")) :
-                        String(format: "%.0f %@", hoursAgo, NSLocalizedString("", comment: "hours ago")))
+                        String(format: "%.0f %@", hoursAgo, NSLocalizedString("hours ago", comment: "")))
                     
                 } else {
                     let daysAgo = floor(hoursAgo / hoursPerDay)
@@ -43,8 +43,8 @@ extension Date {
                     
                     if daysAgo < daysPerMonth {
                         return (daysAgo == 1 ?
-                            String(format: "%.0f %@", daysAgo, NSLocalizedString("", comment: "day ago")) :
-                            String(format: "%.0f %@", daysAgo, NSLocalizedString("", comment: "days ago")))
+                            String(format: "%.0f %@", daysAgo, NSLocalizedString("day ago", comment: "")) :
+                            String(format: "%.0f %@", daysAgo, NSLocalizedString("days ago", comment: "")))
                     } else {
                         let monthsAgo = floor(daysAgo / daysPerMonth)
                         let monthsPerYear = TimeInterval(12.0)

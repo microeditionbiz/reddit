@@ -13,7 +13,7 @@ enum APIServiceError: Error {
     case invalidData
 }
 
-protocol APIRequestProtocol {
+protocol APIRequestProtocol: AnyObject {
     func cancel()
 }
 
