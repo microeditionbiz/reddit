@@ -28,11 +28,9 @@ struct TopResponse: APIResponseBase {
                 guard let childDataPayload = childPayload["data"] as? Payload else { return nil }
                 return FeedItem.object(form: childDataPayload, in: context)
             }
-            
-            try? context.obtainPermanentIDs(for: managedObjects)
-            self.managedObjectIDs = managedObjects.map(\.objectID)
-            
+          
             CoreDataManager.save(context: context)
+            self.managedObjectIDs = managedObjects.map(\.objectID)
         }
     }
 }
@@ -62,7 +60,7 @@ extension FeedItem: NSManagedObjectDictionaryMapping {
             self.identifier = identifier
         } else {
             assertionFailure("Item without identifier")
-            self.identifier = ""
+            self.identifier = UUID().uuidString
         }
         
         if let thumbnailString = dictionary["thumbnail"] as? String {

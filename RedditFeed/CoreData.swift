@@ -30,25 +30,10 @@ internal class FeedItem: NSManagedObject {
     @NSManaged internal var createdAt: Date?
     @NSManaged internal var identifier: String
     @NSManaged internal var postHint: String?
+    @NSManaged internal var removed: Bool
     @NSManaged internal var thumbnail: URL?
     @NSManaged internal var title: String?
     @NSManaged internal var unread: Bool
-    internal var upvoteRatio: Float? {
-        get {
-            let key = "upvoteRatio"
-            willAccessValue(forKey: key)
-            defer { didAccessValue(forKey: key) }
-
-            return primitiveValue(forKey: key) as? Float
-        }
-        set {
-            let key = "upvoteRatio"
-            willChangeValue(forKey: key)
-            defer { didChangeValue(forKey: key) }
-
-        setPrimitiveValue(newValue, forKey: key)
-        }
-    }
     @NSManaged internal var url: URL?
 }
 

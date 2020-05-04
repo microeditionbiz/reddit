@@ -9,12 +9,14 @@
 import UIKit
 import WebKit
 
-class FeedItemWebViewViewController: UIViewController, MessagePresenter {
+class FeedItemWebViewViewController: UIViewController, FeedItemViewControllerProtocol, MessagePresenter {
 
     weak var webView: WKWebView?
     fileprivate var spinner: UIActivityIndicatorView!
 
-    var viewModel: FeedItemViewModelProtocol? {
+    weak var delegate: FeedItemViewControllerDelegate?
+    
+    var viewModel: FeedItemViewModel? {
         willSet {
             if newValue?.mainContent != viewModel?.mainContent {
                 removeWebView()
@@ -28,6 +30,12 @@ class FeedItemWebViewViewController: UIViewController, MessagePresenter {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guard let viewModel = viewModel else { return }
+        delegate?.markAsReadAction(viewController: self, viewModel: viewModel)
     }
     
     func updateUI() {

@@ -9,14 +9,17 @@
 import UIKit
 
 protocol FeedViewControllerDelegate: AnyObject {
-    func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModelProtocol)
+    func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModel)
+    func removeAction(viewController: FeedViewController, feedItem: FeedItemViewModel)
 }
 
 class FeedViewController: UIViewController, MessagePresenter {
+    
     static let loadNextPageViewHeight: CGFloat = 44
     
     @IBOutlet weak var tableView: UITableView!
     weak var loadNextPageView: TableViewLoadNextPageView!
+    weak var delegate: FeedViewControllerDelegate?
     
     var viewModel: FeedViewModelProtocol! {
         didSet {
@@ -24,24 +27,27 @@ class FeedViewController: UIViewController, MessagePresenter {
         }
     }
     
-    weak var delegate: FeedViewControllerDelegate?
+    var dataSource: FeedDiffableDataSource!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = NSLocalizedString("Top", comment: "")
         
+        configureDataSource()
         configureLoadNextPageView()
         configureRefreshControl()
         
+        updateUI()
         viewModel.fetch()
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        if let selectedIndexPath = tableView.indexPathForSelectedRow, let splitViewController = splitViewController, splitViewController.isCollapsed {
-            tableView.deselectRow(at: selectedIndexPath, animated: true)
+    
+    fileprivate func configureDataSource() {
+        let removeAction: FeedDiffableDataSource.RemoveAction = { [unowned self] indexPath in
+            let feedItem = self.viewModel.items[indexPath.row]
+            self.delegate?.removeAction(viewController: self, feedItem: feedItem)
         }
-        super.viewWillAppear(animated)
+        self.dataSource = FeedDiffableDataSource(tableView: tableView, removeAction: removeAction)
     }
     
     fileprivate func configureLoadNextPageView() {
@@ -61,7 +67,7 @@ class FeedViewController: UIViewController, MessagePresenter {
     fileprivate func updateUI() {
         guard isViewLoaded else { return }
         tableView.refreshControl?.endRefreshing()
-        tableView.reloadData()
+        dataSource.update(items: viewModel.items)
     }
     
     @objc func refreshControlAction(_ sender: AnyObject) {
@@ -86,29 +92,43 @@ extension FeedViewController: FeedViewModelDelegate {
 }
 
 
-// MARK: - UITableViewDataSource
+// MARK: - UITableViewDiffableDataSource
 
-extension FeedViewController: UITableViewDataSource {
+class FeedDiffableDataSource: UITableViewDiffableDataSource<FeedDiffableDataSource.Section, FeedItemViewModel> {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.items.count
+    enum Section: CaseIterable {
+        case main
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FeedCell.self), for: indexPath) as! FeedCell
-        let item = viewModel.items[indexPath.row]
-        cell.configure(with: item)
-        return cell
+    typealias RemoveAction = (IndexPath)->()
+    let removeAction: RemoveAction
+    
+    init(tableView: UITableView, removeAction: @escaping RemoveAction) {
+        self.removeAction = removeAction
+        
+        super.init(tableView: tableView) { tableView, indexPath, feedItem in
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FeedCell.self), for: indexPath) as! FeedCell
+            cell.configure(with: feedItem)
+            return cell
+        }
+        
+        defaultRowAnimation = .fade
     }
- 
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    
+    func update(items: [FeedItemViewModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, FeedItemViewModel>()
+         snapshot.appendSections([.main])
+         snapshot.appendItems(items, toSection: .main)
+         self.apply(snapshot, animatingDifferences: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            viewModel.items.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            removeAction(indexPath)
         }
     }
     
@@ -119,8 +139,8 @@ extension FeedViewController: UITableViewDataSource {
 extension FeedViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = viewModel.items[indexPath.row]
-        delegate?.selectAction(viewController: self, feedItem: item)
+        let feedItem = viewModel.items[indexPath.row]
+        delegate?.selectAction(viewController: self, feedItem: feedItem)
     }
 
 }

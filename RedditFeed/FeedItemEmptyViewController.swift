@@ -8,6 +8,7 @@
 
 import UIKit
 
-class FeedItemEmptyViewController: UIViewController {
-
+class FeedItemEmptyViewController: UIViewController, FeedItemViewControllerProtocol {
+    weak var delegate: FeedItemViewControllerDelegate?
+    var viewModel: FeedItemViewModel?
 }

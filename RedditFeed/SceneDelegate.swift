@@ -30,8 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UISplitViewControllerDe
         window.rootViewController = splitViewController
         window.makeKeyAndVisible()
         self.window = window
-        
-      
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -60,6 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, UISplitViewControllerDe
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        CoreDataManager.save(context: CoreDataManager.viewContex)
     }
 
 }

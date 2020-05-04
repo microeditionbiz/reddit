@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 import Combine
 
 protocol RedditDataManager {
@@ -14,15 +15,14 @@ protocol RedditDataManager {
     var fetchError: AnyPublisher<Error, Never> {get}
 
     func deleteFeedItem(with identifier: String)
-    func deleteAll()
-    func markFeedItem(asRead read: Bool, identifier: String)
+    func markFeedItemAsRead(with identifier: String)
     
     func fetch()
     func fetchNextPage()
 }
 
 class RedditDataManagerProvider: RedditDataManager {
-    fileprivate static let pageSize: Int = 10 // 35
+    fileprivate static let pageSize: Int = 35
   
     typealias Context = HasAPIService
     private let ctx: Context
@@ -31,32 +31,41 @@ class RedditDataManagerProvider: RedditDataManager {
     private var afterIdentifier: String?
     
     lazy var feedItems: AnyPublisher<[FeedItem], Never> = {
-        return $_feedItems.eraseToAnyPublisher()
+        return _feedItems.eraseToAnyPublisher()
     }()
     
+    fileprivate let _feedItems: CurrentValueSubject<[FeedItem], Never>
+      
     lazy var fetchError: AnyPublisher<Error, Never> = {
         return _fetchError.eraseToAnyPublisher()
     }()
     
-    @Published fileprivate var _feedItems: [FeedItem]
     fileprivate let _fetchError: PassthroughSubject<Error, Never>
-    
+
     init(context: Context) {
         self.ctx = context
-        self._feedItems = []
+        self._feedItems = CurrentValueSubject([])
         self._fetchError = PassthroughSubject<Error, Never>()
     }
     
     func deleteFeedItem(with identifier: String) {
+        guard let index = _feedItems.value.firstIndex(where: {$0.identifier == identifier}), !_feedItems.value[index].removed else { return }
+    
+        let feedItem = _feedItems.value[index]
+        feedItem.removed = true
+        feedItem.save()
         
+        _feedItems.value.remove(at: index)
     }
     
-    func deleteAll() {
+    func markFeedItemAsRead(with identifier: String) {
+        guard let index = _feedItems.value.firstIndex(where: {$0.identifier == identifier}), _feedItems.value[index].unread else { return }
+           
+        let feedItem = _feedItems.value[index]
+        feedItem.unread = false
+        feedItem.save()
         
-    }
-    
-    func markFeedItem(asRead read: Bool, identifier: String) {
-        
+        _feedItems.value[index] = feedItem
     }
     
     func fetch() {
@@ -75,18 +84,38 @@ class RedditDataManagerProvider: RedditDataManager {
             self.currentFetchRequest = nil
             switch result {
             case .success(let response):
-                // We need to fetch NSManagedObjects in the view context
-                let newItems = FeedItem.fetchObjects(withObjectIDs: response.managedObjectIDs, in: CoreDataManager.viewContex)
-                
-                if afterIdentifier == nil {
-                    self._feedItems = newItems
-                } else {
-                    self._feedItems.append(contentsOf: newItems)
-                }
-                
                 self.afterIdentifier = response.afterIdentifier
+                self.processFeedItems(response.managedObjectIDs, append: afterIdentifier != nil)
             case .failure(let error):
                 self._fetchError.send(error)
+            }
+        }
+    }
+    
+    fileprivate func processFeedItems(_ managedObjectIDs: [NSManagedObjectID], append: Bool) {
+        // We need to fetch NSManagedObjects in the view context
+        let newItems: [FeedItem] = FeedItem.fetchObjects(withObjectIDs: managedObjectIDs, in: CoreDataManager.viewContex).filter({!$0.removed})
+        
+        if newItems.isEmpty {
+            // if all items where deleted we will request next page.
+            // This logic is really bad, the items have to be deleted at
+            // the API level to avoid this.
+            DispatchQueue.main.async {
+                self.fetchNextPage()
+            }
+        } else {
+            if !append {
+                self._feedItems.value = newItems
+            } else {
+                // Before adding new items we have to check if the items is
+                // already in the list. This may happen when an item that is
+                // visible, changed its current position and now it's
+                // visible on the second page
+                let identifiers = Set(newItems.map(\.identifier))
+                              
+                let updatedFeedItems = self._feedItems.value.filter({!identifiers.contains($0.identifier)}) + newItems
+                  
+                self._feedItems.value = updatedFeedItems
             }
         }
     }

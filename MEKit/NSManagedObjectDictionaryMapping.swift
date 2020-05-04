@@ -31,7 +31,7 @@ extension NSManagedObjectDictionaryMapping {
         return managedObject!
     }
     
-    static func fetchObject(withIDValues IDValues: [Any], in context: NSManagedObjectContext) -> Self? {
+    static func fetchObject(withIDValues IDValues: [Any], in context: NSManagedObjectContext = CoreDataManager.viewContex) -> Self? {
 
         let objectIDKeys = Self.objectIDKeys()
         assert(IDValues.count == objectIDKeys.count, "The number of values has to match with the number of ids")

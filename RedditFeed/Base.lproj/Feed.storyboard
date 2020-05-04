@@ -182,7 +182,6 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="01l-M5-T4k" id="Lv1-tI-AGX"/>
                                     <outlet property="delegate" destination="01l-M5-T4k" id="rZZ-6F-xbN"/>
                                 </connections>
                             </tableView>

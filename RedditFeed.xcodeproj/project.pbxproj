@@ -26,6 +26,7 @@
 		6E003EE0245F73C2002A3010 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E003EDF245F73C2002A3010 /* WebKit.framework */; };
 		6E003EE2245F7D04002A3010 /* FeedItemImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EE1245F7D04002A3010 /* FeedItemImageViewController.swift */; };
 		6E003EE4245F7E91002A3010 /* FeedItemEmptyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EE3245F7E91002A3010 /* FeedItemEmptyViewController.swift */; };
+		6E14C1F92460BB12003329C9 /* FeedItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E14C1F82460BB12003329C9 /* FeedItemViewController.swift */; };
 		6E7152D8245CB8B20011ABDB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D7245CB8B20011ABDB /* AppDelegate.swift */; };
 		6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */; };
 		6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7152DB245CB8B20011ABDB /* FeedViewController.swift */; };
@@ -72,6 +73,7 @@
 		6E003EDF245F73C2002A3010 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		6E003EE1245F7D04002A3010 /* FeedItemImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemImageViewController.swift; sourceTree = "<group>"; };
 		6E003EE3245F7E91002A3010 /* FeedItemEmptyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemEmptyViewController.swift; sourceTree = "<group>"; };
+		6E14C1F82460BB12003329C9 /* FeedItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemViewController.swift; sourceTree = "<group>"; };
 		6E7152D4245CB8B20011ABDB /* RedditFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RedditFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7152D7245CB8B20011ABDB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E7152D9245CB8B20011ABDB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,7 +93,7 @@
 		6E715309245CE2F00011ABDB /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		6EDC9F54246071D200534F5D /* RedditDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditDataManager.swift; sourceTree = "<group>"; };
 		6EDC9F5624607B1800534F5D /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = SOURCE_ROOT; };
-		6EDC9F5724607B2800534F5D /* CoreData.stencil */ = {isa = PBXFileReference; lastKnownFileType = file; path = CoreData.stencil; sourceTree = SOURCE_ROOT; };
+		6EDC9F5724607B2800534F5D /* CoreData.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreData.stencil; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,27 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		6E14C1F62460BAD4003329C9 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				6E14C1F82460BB12003329C9 /* FeedItemViewController.swift */,
+				6E7152DD245CB8B20011ABDB /* FeedItemWebViewViewController.swift */,
+				6E003EE1245F7D04002A3010 /* FeedItemImageViewController.swift */,
+				6E003EE3245F7E91002A3010 /* FeedItemEmptyViewController.swift */,
+			);
+			name = Detail;
+			sourceTree = "<group>";
+		};
+		6E14C1F72460BAE0003329C9 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				6E715301245CBCBA0011ABDB /* FeedViewModel.swift */,
+				6E7152DB245CB8B20011ABDB /* FeedViewController.swift */,
+				6E715309245CE2F00011ABDB /* FeedCell.swift */,
+			);
+			name = List;
+			sourceTree = "<group>";
+		};
 		6E7152CB245CB8B20011ABDB = {
 			isa = PBXGroup;
 			children = (
@@ -245,12 +268,8 @@
 			children = (
 				6E7152DF245CB8B20011ABDB /* Feed.storyboard */,
 				6E7152FE245CBB800011ABDB /* FeedCoordinator.swift */,
-				6E715301245CBCBA0011ABDB /* FeedViewModel.swift */,
-				6E7152DB245CB8B20011ABDB /* FeedViewController.swift */,
-				6E715309245CE2F00011ABDB /* FeedCell.swift */,
-				6E7152DD245CB8B20011ABDB /* FeedItemWebViewViewController.swift */,
-				6E003EE1245F7D04002A3010 /* FeedItemImageViewController.swift */,
-				6E003EE3245F7E91002A3010 /* FeedItemEmptyViewController.swift */,
+				6E14C1F72460BAE0003329C9 /* List */,
+				6E14C1F62460BAD4003329C9 /* Detail */,
 			);
 			name = Feed;
 			sourceTree = "<group>";
@@ -270,10 +289,10 @@
 		6EDC9F532460719C00534F5D /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				6EDC9F5724607B2800534F5D /* CoreData.stencil */,
-				6EDC9F5624607B1800534F5D /* swiftgen.yml */,
 				6E003ECE245F1836002A3010 /* RedditFeed.xcdatamodeld */,
 				6E003ED1245F19A9002A3010 /* CoreData.swift */,
+				6EDC9F5724607B2800534F5D /* CoreData.stencil */,
+				6EDC9F5624607B1800534F5D /* swiftgen.yml */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";
@@ -394,6 +413,7 @@
 				6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */,
 				6E003EB3245F152E002A3010 /* TableViewLoadNextPageView.swift in Sources */,
 				6E7152DE245CB8B20011ABDB /* FeedItemWebViewViewController.swift in Sources */,
+				6E14C1F92460BB12003329C9 /* FeedItemViewController.swift in Sources */,
 				6E715308245CDBB90011ABDB /* DependencyContainer.swift in Sources */,
 				6E003EB9245F153E002A3010 /* DownloadService.swift in Sources */,
 				6E003EDD245F30D8002A3010 /* Date+Extensions.swift in Sources */,

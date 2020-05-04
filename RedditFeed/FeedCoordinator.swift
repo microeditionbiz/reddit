@@ -9,7 +9,7 @@
 import UIKit
 
 class FeedCoordinator: Coordinator {
-    typealias Context = FeedViewModelFactory
+    typealias Context = FeedViewModelFactory & HasRedditDataManager
     let ctx: Context
     
     weak var splitViewController: UISplitViewController!
@@ -39,19 +39,17 @@ class FeedCoordinator: Coordinator {
         return UINavigationController(rootViewController: feedViewController)
     }
     
-    func createFeedItemVC(withViewModel viewModel: FeedItemViewModelProtocol?) -> UINavigationController {
-        var vc: UIViewController!
+    func createFeedItemVC(withViewModel viewModel: FeedItemViewModel?) -> UINavigationController {
+        var vc: FeedItemViewControllerProtocol!
         
         if let viewModel = viewModel {
             if viewModel.hasImage {
-                let feedItemVC = storyboard.instantiateViewController(identifier: String(describing: FeedItemImageViewController.self)) as! FeedItemImageViewController
-                feedItemVC.viewModel = viewModel
-                vc = feedItemVC
+                vc = storyboard.instantiateViewController(identifier: String(describing: FeedItemImageViewController.self)) as! FeedItemImageViewController
             } else {
-                let feedItemVC = storyboard.instantiateViewController(identifier: String(describing: FeedItemWebViewViewController.self)) as! FeedItemWebViewViewController
-                feedItemVC.viewModel = viewModel
-                vc = feedItemVC
+                vc = storyboard.instantiateViewController(identifier: String(describing: FeedItemWebViewViewController.self)) as! FeedItemWebViewViewController
             }
+            vc.viewModel = viewModel
+            vc.delegate = self
         } else {
             vc = storyboard.instantiateViewController(identifier: String(describing: FeedItemEmptyViewController.self)) as! FeedItemEmptyViewController
         }
@@ -68,8 +66,20 @@ class FeedCoordinator: Coordinator {
 
 extension FeedCoordinator: FeedViewControllerDelegate {
     
-    func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModelProtocol) {
+    func selectAction(viewController: FeedViewController, feedItem: FeedItemViewModel) {
         splitViewController.showDetailViewController(createFeedItemVC(withViewModel: feedItem), sender: self)
+    }
+    
+    func removeAction(viewController: FeedViewController, feedItem: FeedItemViewModel) {
+        ctx.dataManager.deleteFeedItem(with: feedItem.identifier)
+    }
+    
+}
+
+extension FeedCoordinator: FeedItemViewControllerDelegate {
+    
+    func markAsReadAction(viewController: FeedItemViewControllerProtocol, viewModel: FeedItemViewModel) {
+        ctx.dataManager.markFeedItemAsRead(with: viewModel.identifier)
     }
     
 }
@@ -79,10 +89,10 @@ extension FeedCoordinator: FeedViewControllerDelegate {
 extension FeedCoordinator: UISplitViewControllerDelegate {
         
     func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-        guard let navController = secondaryViewController as? UINavigationController, let _ = navController.topViewController as? FeedItemEmptyViewController else {
+        guard let navController = secondaryViewController as? UINavigationController, let vc = navController.topViewController as? FeedItemViewControllerProtocol else {
             return false
         }
-        return true
+        return vc.viewModel == nil
     }
     
 }

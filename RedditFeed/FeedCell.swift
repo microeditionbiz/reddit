@@ -22,7 +22,7 @@ class FeedCell: UITableViewCell {
         selectionStyle = .default
     }
     
-    func configure(with viewModel: FeedItemViewModelProtocol) {
+    func configure(with viewModel: FeedItemViewModel) {
         detailsLabel.text = viewModel.details
         titleLabel.text = viewModel.title
         commentsLabel.text = viewModel.comments

@@ -6,11 +6,14 @@
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="postHint" optional="YES" attributeType="String"/>
+        <attribute name="removed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="URI"/>
         <attribute name="title" optional="YES" attributeType="String"/>
         <attribute name="unread" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
-        <attribute name="upvoteRatio" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
+        <fetchIndex name="byPropertyIndex">
+            <fetchIndexElement property="identifier" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <elements>
         <element name="FeedItem" positionX="-63" positionY="-18" width="128" height="193"/>

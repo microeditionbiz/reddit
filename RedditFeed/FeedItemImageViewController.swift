@@ -8,11 +8,13 @@
 
 import UIKit
 
-class FeedItemImageViewController: UIViewController, MessagePresenter {
+class FeedItemImageViewController: UIViewController, FeedItemViewControllerProtocol, MessagePresenter {
     
     @IBOutlet var imageView: UIImageView?
       
-    var viewModel: FeedItemViewModelProtocol? {
+    weak var delegate: FeedItemViewControllerDelegate?
+    
+    var viewModel: FeedItemViewModel? {
         didSet {
             updateUI()
         }
@@ -21,6 +23,12 @@ class FeedItemImageViewController: UIViewController, MessagePresenter {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateUI()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        guard let viewModel = viewModel else { return }
+        delegate?.markAsReadAction(viewController: self, viewModel: viewModel)
     }
     
     func updateUI() {

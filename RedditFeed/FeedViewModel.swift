@@ -28,7 +28,7 @@ protocol FeedViewModelDelegate: AnyObject {
 
 protocol FeedViewModelProtocol {
     var delegate: FeedViewModelDelegate? {get set}
-    var items: [FeedItemViewModelProtocol] {get set}
+    var items: [FeedItemViewModel] {get}
     
     func fetch()
     func fetchNextPage()
@@ -40,7 +40,7 @@ class FeedViewModel: FeedViewModelProtocol  {
     
     weak var delegate: FeedViewModelDelegate?
     
-    var items: [FeedItemViewModelProtocol] = []
+    var items: [FeedItemViewModel] = []
     
     var cancellables = Set<AnyCancellable>()
     
@@ -52,7 +52,9 @@ class FeedViewModel: FeedViewModelProtocol  {
         }.store(in: &cancellables)
         
         ctx.dataManager.feedItems.sink { [unowned self] newItems in
-            self.items = newItems.map(FeedItemViewModel.init)
+            self.items = newItems.map { item in
+                return FeedItemViewModel(feedItem: item)
+            }
             self.delegate?.update(viewModel: self)
         }.store(in: &cancellables)
     }
@@ -69,23 +71,14 @@ class FeedViewModel: FeedViewModelProtocol  {
 
 // MARK: - Feed Item
 
-protocol FeedItemViewModelProtocol {
-    var title: String {get}
-    var details: String {get}
-    var thumbnail: URL? {get}
-    var comments: String {get}
-    var unread: Bool {get}
-    var mainContent: URL? {get}
-    var hasImage: Bool {get}
-}
-
-struct FeedItemViewModel: FeedItemViewModelProtocol {
-    let feedItem: FeedItem
+struct FeedItemViewModel {
+    fileprivate let feedItem: FeedItem
     
+    let identifier: String
     let title: String
     let thumbnail: URL?
     let comments: String
-    let unread: Bool
+    var unread: Bool
     let mainContent: URL?
     let hasImage: Bool
     
@@ -105,6 +98,7 @@ struct FeedItemViewModel: FeedItemViewModelProtocol {
     init(feedItem: FeedItem) {
         self.feedItem = feedItem
         
+        self.identifier = feedItem.identifier
         self.title = feedItem.title ?? ""
         
         if let thumbnail = feedItem.thumbnail, thumbnail.absoluteString.hasPrefix("http") {
@@ -126,4 +120,17 @@ struct FeedItemViewModel: FeedItemViewModelProtocol {
         }
     }
 
+}
+
+extension FeedItemViewModel: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+        hasher.combine(unread)
+    }
+    
+    static func == (lhs: FeedItemViewModel, rhs: FeedItemViewModel) -> Bool {
+        return lhs.identifier == rhs.identifier && lhs.unread == rhs.unread
+    }
+    
 }
