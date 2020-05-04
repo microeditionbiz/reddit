@@ -24,50 +24,53 @@ import Foundation
 {{ accessModifier }} class {{ entityClassName }}: {{ superclass }} {
   {% set override %}{% if superclass != "NSManagedObject" %}override {% endif %}{% endset %}
 
-  @nonobjc {{ accessModifier }} static func fetchRequest(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil) -> NSFetchRequest<{{ entityClassName }}> {
-    return Self.fetchRequest(resultOf: {{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize)
-  }
-
-  @nonobjc {{ accessModifier }} static func fetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [{{ entityClassName }}]? {
-    return Self.fetchObjects({{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context)
-  }
-
-  @discardableResult @nonobjc {{ accessModifier }} static func asyncFetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext, completion: @escaping ([{{ entityClassName }}]?)->()) -> NSPersistentStoreAsynchronousResult? {
-    return Self.asyncFetchObjects({{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context, completion: completion)
-  }
-
-
-  {% for attribute in entity.attributes %}
-  {% if attribute.usesScalarValueType and attribute.isOptional %}
-  {{ accessModifier }} var {{ attribute.name }}: {{ attribute.typeName }}? {
-    get {
-      let key = "{{ attribute.name }}"
-      willAccessValue(forKey: key)
-      defer { didAccessValue(forKey: key) }
-
-      return primitiveValue(forKey: key) as? {{ attribute.typeName }}
+    @nonobjc {{ accessModifier }} static func fetchRequest(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil) -> NSFetchRequest<{{ entityClassName }}> {
+        return Self.fetchRequest(resultOf: {{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize)
     }
-    set {
-      let key = "{{ attribute.name }}"
-      willChangeValue(forKey: key)
-      defer { didChangeValue(forKey: key) }
 
-      setPrimitiveValue(newValue, forKey: key)
+    @nonobjc {{ accessModifier }} static func fetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [{{ entityClassName }}] {
+        return Self.fetchObjects({{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context)
     }
-  }
+
+    @discardableResult @nonobjc {{ accessModifier }} static func asyncFetchObjects(where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext, completion: @escaping ([{{ entityClassName }}]?)->()) -> NSPersistentStoreAsynchronousResult? {
+        return Self.asyncFetchObjects({{ entityClassName }}.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize, in: context, completion: completion)
+    }
+
+    @discardableResult @nonobjc {{ accessModifier }} static func fetchObjects(withObjectIDs objectIDs: [NSManagedObjectID], in context: NSManagedObjectContext) -> [{{ entityClassName }}] {
+        return Self.fetchObjects({{ entityClassName }}.self, withObjectIDs: objectIDs, in: context)
+    }
+
+    {% for attribute in entity.attributes %}
+    {% if attribute.usesScalarValueType and attribute.isOptional %}
+    {{ accessModifier }} var {{ attribute.name }}: {{ attribute.typeName }}? {
+        get {
+            let key = "{{ attribute.name }}"
+            willAccessValue(forKey: key)
+            defer { didAccessValue(forKey: key) }
+
+            return primitiveValue(forKey: key) as? {{ attribute.typeName }}
+        }
+        set {
+            let key = "{{ attribute.name }}"
+            willChangeValue(forKey: key)
+            defer { didChangeValue(forKey: key) }
+
+        setPrimitiveValue(newValue, forKey: key)
+        }
+    }
   {% else %}
-  @NSManaged {{ accessModifier }} var {{ attribute.name }}: {{ attribute.typeName }}{% if attribute.isOptional %}?{% endif %}
+    @NSManaged {{ accessModifier }} var {{ attribute.name }}: {{ attribute.typeName }}{% if attribute.isOptional %}?{% endif %}
   {% endif %}
   {% endfor %}
   {% for relationship in entity.relationships %}
   {% if relationship.isToMany %}
-  @NSManaged {{ accessModifier }} var {{ relationship.name }}: {% if relationship.isOrdered %}NSOrderedSet{% else %}Set<{{ model.entities[relationship.destinationEntity].className|default:"NSManagedObject" }}>{% endif %}{% if relationship.isOptional %}?{% endif %}
+    @NSManaged {{ accessModifier }} var {{ relationship.name }}: {% if relationship.isOrdered %}NSOrderedSet{% else %}Set<{{ model.entities[relationship.destinationEntity].className|default:"NSManagedObject" }}>{% endif %}{% if relationship.isOptional %}?{% endif %}
   {% else %}
-  @NSManaged {{ accessModifier }} var {{ relationship.name }}: {{ model.entities[relationship.destinationEntity].className|default:"NSManagedObject" }}{% if relationship.isOptional %}?{% endif %}
+    @NSManaged {{ accessModifier }} var {{ relationship.name }}: {{ model.entities[relationship.destinationEntity].className|default:"NSManagedObject" }}{% if relationship.isOptional %}?{% endif %}
   {% endif %}
   {% endfor %}
   {% for fetchedProperty in entity.fetchedProperties %}
-  @NSManaged {{ accessModifier }} var {{ fetchedProperty.name }}: [{{ fetchedProperty.fetchRequest.entity }}]
+    @NSManaged {{ accessModifier }} var {{ fetchedProperty.name }}: [{{ fetchedProperty.fetchRequest.entity }}]
   {% endfor %}
 }
 
@@ -79,36 +82,36 @@ import Foundation
 
 extension {{ entityClassName }} {
   {% if relationship.isOrdered %}
-  @objc(insertObject:in{{ relationshipName }}AtIndex:)
-  @NSManaged public func insertInto{{ relationshipName }}(_ value: {{ destinationEntityClassName }}, at idx: Int)
+    @objc(insertObject:in{{ relationshipName }}AtIndex:)
+    @NSManaged public func insertInto{{ relationshipName }}(_ value: {{ destinationEntityClassName }}, at idx: Int)
 
-  @objc(removeObjectFrom{{ relationshipName }}AtIndex:)
-  @NSManaged public func removeFrom{{ relationshipName }}(at idx: Int)
+    @objc(removeObjectFrom{{ relationshipName }}AtIndex:)
+    @NSManaged public func removeFrom{{ relationshipName }}(at idx: Int)
 
-  @objc(insert{{ relationshipName }}:atIndexes:)
-  @NSManaged public func insertInto{{ relationshipName }}(_ values: [{{ destinationEntityClassName }}], at indexes: NSIndexSet)
+    @objc(insert{{ relationshipName }}:atIndexes:)
+    @NSManaged public func insertInto{{ relationshipName }}(_ values: [{{ destinationEntityClassName }}], at indexes: NSIndexSet)
 
-  @objc(remove{{ relationshipName }}AtIndexes:)
-  @NSManaged public func removeFrom{{ relationshipName }}(at indexes: NSIndexSet)
+    @objc(remove{{ relationshipName }}AtIndexes:)
+    @NSManaged public func removeFrom{{ relationshipName }}(at indexes: NSIndexSet)
 
-  @objc(replaceObjectIn{{ relationshipName }}AtIndex:withObject:)
-  @NSManaged public func replace{{ relationshipName }}(at idx: Int, with value: {{ destinationEntityClassName }})
+    @objc(replaceObjectIn{{ relationshipName }}AtIndex:withObject:)
+    @NSManaged public func replace{{ relationshipName }}(at idx: Int, with value: {{ destinationEntityClassName }})
 
-  @objc(replace{{ relationshipName }}AtIndexes:with{{ relationshipName }}:)
-  @NSManaged public func replace{{ relationshipName }}(at indexes: NSIndexSet, with values: [{{ destinationEntityClassName }}])
+    @objc(replace{{ relationshipName }}AtIndexes:with{{ relationshipName }}:)
+    @NSManaged public func replace{{ relationshipName }}(at indexes: NSIndexSet, with values: [{{ destinationEntityClassName }}])
 
   {% endif %}
-  @objc(add{{ relationshipName }}Object:)
-  @NSManaged public func addTo{{ relationshipName }}(_ value: {{ destinationEntityClassName }})
+    @objc(add{{ relationshipName }}Object:)
+    @NSManaged public func addTo{{ relationshipName }}(_ value: {{ destinationEntityClassName }})
 
-  @objc(remove{{ relationshipName }}Object:)
-  @NSManaged public func removeFrom{{ relationshipName }}(_ value: {{ destinationEntityClassName }})
+    @objc(remove{{ relationshipName }}Object:)
+    @NSManaged public func removeFrom{{ relationshipName }}(_ value: {{ destinationEntityClassName }})
 
-  @objc(add{{ relationshipName }}:)
-  @NSManaged public func addTo{{ relationshipName }}(_ values: {{ collectionClassName }})
+    @objc(add{{ relationshipName }}:)
+    @NSManaged public func addTo{{ relationshipName }}(_ values: {{ collectionClassName }})
 
-  @objc(remove{{ relationshipName }}:)
-  @NSManaged public func removeFrom{{ relationshipName }}(_ values: {{ collectionClassName }})
+    @objc(remove{{ relationshipName }}:)
+    @NSManaged public func removeFrom{{ relationshipName }}(_ values: {{ collectionClassName }})
 }
 
 {% endfor %}

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol FeedViewModelFactory {
     func newFeedViewModel() -> FeedViewModelProtocol
@@ -34,46 +35,34 @@ protocol FeedViewModelProtocol {
 }
 
 class FeedViewModel: FeedViewModelProtocol  {
-    typealias Context = HasAPIService
+    typealias Context = HasRedditDataManager
     let ctx: Context
     
     weak var delegate: FeedViewModelDelegate?
-    weak var currentFetchRequest: APIRequestProtocol?
     
     var items: [FeedItemViewModelProtocol] = []
-    var afterIdentifier: String?
+    
+    var cancellables = Set<AnyCancellable>()
     
     init(context: Context) {
         self.ctx = context
+        
+        ctx.dataManager.fetchError.sink { [unowned self] error in
+            self.delegate?.updateError(viewModel: self, error: error)
+        }.store(in: &cancellables)
+        
+        ctx.dataManager.feedItems.sink { [unowned self] newItems in
+            self.items = newItems.map(FeedItemViewModel.init)
+            self.delegate?.update(viewModel: self)
+        }.store(in: &cancellables)
     }
     
     func fetch() {
-        currentFetchRequest?.cancel()
-        fetch(afterIdentifier: nil)
+        ctx.dataManager.fetch()
     }
     
     func fetchNextPage() {
-        guard currentFetchRequest == nil else { return }
-        fetch(afterIdentifier: afterIdentifier)
-    }
-    
-    fileprivate func fetch(afterIdentifier: String?) {
-        let endpoint = RedditAPI.Top(afterIdentifier: afterIdentifier)
-        currentFetchRequest = ctx.apiService.load(endpoint: endpoint) { result in
-            self.currentFetchRequest = nil
-            switch result {
-            case .success(let response):
-                self.afterIdentifier = response.afterIdentifier
-                if let newItems = FeedItem.fetchObjects(in: CoreDataManager.viewContex) {
-                    self.items = newItems.map(FeedItemViewModel.init)
-                } else {
-                    self.items.removeAll()
-                }
-                self.delegate?.update(viewModel: self)
-            case .failure(let error):
-                self.delegate?.updateError(viewModel: self, error: error)
-            }
-        }
+        ctx.dataManager.fetchNextPage()
     }
     
 }

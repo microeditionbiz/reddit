@@ -11,8 +11,11 @@ import UIKit
 class DependencyContainer {
     
     lazy var apiService: APIServiceProtocol = {
-        let baseURL = URL(string: "https://www.reddit.com")!
-        return APIService(baseURL: baseURL)
+        return APIService(baseURL: URL(string: "https://www.reddit.com")!)
+    }()
+    
+    lazy var dataManager: RedditDataManager = {
+        return RedditDataManagerProvider(context: self)
     }()
 
     
@@ -29,3 +32,9 @@ protocol HasAPIService {
 
 extension DependencyContainer: HasAPIService { }
 
+
+protocol HasRedditDataManager {
+    var dataManager: RedditDataManager {get}
+}
+
+extension DependencyContainer: HasRedditDataManager { }

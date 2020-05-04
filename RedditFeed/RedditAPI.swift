@@ -13,8 +13,7 @@ enum RedditAPI {
     struct Top: APIEndpoint {
         typealias ResultType = TopResponse
        
-        static let pageSize: Int = 35
-        
+        let pageSize: Int
         let afterIdentifier: String?
         
         let path: String = "/top.json"
@@ -22,14 +21,11 @@ enum RedditAPI {
         
         var queryParameters: [String : Any]? {
             var q = [String: Any]()
-            q["limit"] = Self.pageSize
+            q["limit"] = pageSize
+            q["t"] = "today"
             if let afterIdentifier = afterIdentifier {
                 q["after"] = afterIdentifier
             }
-//            q["limit"] = Self.pageSize
-//            q["count"] = 0
-//            q["t"] = "day"
-//            q["inc"] = inc
             return q
         }
     }

@@ -96,14 +96,14 @@ protocol APIServiceProtocol {
 }
 
 class APIService: APIServiceProtocol {
-    
     let baseURL: URL
     
     init(baseURL: URL) {
         self.baseURL = baseURL
     }
     
-    @discardableResult func load<E: APIEndpoint>(endpoint: E, completion: @escaping (Result<E.ResultType, Error>)->()) -> APIRequestProtocol {
+    @discardableResult
+    func load<E: APIEndpoint>(endpoint: E, completion: @escaping (Result<E.ResultType, Error>)->()) -> APIRequestProtocol {
         
         let urlRequest = endpoint.createURLRequest(baseURL: baseURL)
         

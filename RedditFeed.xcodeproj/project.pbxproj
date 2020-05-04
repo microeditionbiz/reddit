@@ -15,7 +15,6 @@
 		6E003EBD245F154C002A3010 /* URL+sha256Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EBB245F154C002A3010 /* URL+sha256Hash.swift */; };
 		6E003EC2245F1590002A3010 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC1245F1590002A3010 /* AsyncOperation.swift */; };
 		6E003EC4245F15A8002A3010 /* UIImageView+Remote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC3245F15A8002A3010 /* UIImageView+Remote.swift */; };
-		6E003EC7245F15D8002A3010 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003EC6245F15D8002A3010 /* Formatter.swift */; };
 		6E003ECB245F1725002A3010 /* RedditAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003ECA245F1725002A3010 /* RedditAPI.swift */; };
 		6E003ECD245F174B002A3010 /* RedditModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E003ECC245F174B002A3010 /* RedditModel.swift */; };
 		6E003ED0245F1836002A3010 /* RedditFeed.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E003ECE245F1836002A3010 /* RedditFeed.xcdatamodeld */; };
@@ -40,6 +39,7 @@
 		6E715304245CC8560011ABDB /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715303245CC8560011ABDB /* Coordinator.swift */; };
 		6E715308245CDBB90011ABDB /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715307245CDBB90011ABDB /* DependencyContainer.swift */; };
 		6E71530A245CE2F00011ABDB /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E715309245CE2F00011ABDB /* FeedCell.swift */; };
+		6EDC9F55246071D200534F5D /* RedditDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EDC9F54246071D200534F5D /* RedditDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +61,6 @@
 		6E003EBB245F154C002A3010 /* URL+sha256Hash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+sha256Hash.swift"; sourceTree = "<group>"; };
 		6E003EC1245F1590002A3010 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		6E003EC3245F15A8002A3010 /* UIImageView+Remote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Remote.swift"; sourceTree = "<group>"; };
-		6E003EC6245F15D8002A3010 /* Formatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		6E003ECA245F1725002A3010 /* RedditAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditAPI.swift; sourceTree = "<group>"; };
 		6E003ECC245F174B002A3010 /* RedditModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditModel.swift; sourceTree = "<group>"; };
 		6E003ECF245F1836002A3010 /* RedditFeed.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = RedditFeed.xcdatamodel; sourceTree = "<group>"; };
@@ -90,6 +89,9 @@
 		6E715303245CC8560011ABDB /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		6E715307245CDBB90011ABDB /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
 		6E715309245CE2F00011ABDB /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		6EDC9F54246071D200534F5D /* RedditDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditDataManager.swift; sourceTree = "<group>"; };
+		6EDC9F5624607B1800534F5D /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = SOURCE_ROOT; };
+		6EDC9F5724607B2800534F5D /* CoreData.stencil */ = {isa = PBXFileReference; lastKnownFileType = file; path = CoreData.stencil; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +116,6 @@
 		6E003EBE245F1553002A3010 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				6E003EC6245F15D8002A3010 /* Formatter.swift */,
 				6E003EBA245F154C002A3010 /* FileSystemHelper.swift */,
 				6E003EC1245F1590002A3010 /* AsyncOperation.swift */,
 				6E715303245CC8560011ABDB /* Coordinator.swift */,
@@ -161,10 +162,10 @@
 		6E003EC9245F1715002A3010 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6E003ED1245F19A9002A3010 /* CoreData.swift */,
+				6EDC9F532460719C00534F5D /* Core Data */,
 				6E003ECA245F1725002A3010 /* RedditAPI.swift */,
 				6E003ECC245F174B002A3010 /* RedditModel.swift */,
-				6E003ECE245F1836002A3010 /* RedditFeed.xcdatamodeld */,
+				6EDC9F54246071D200534F5D /* RedditDataManager.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -264,6 +265,17 @@
 				6E003EBE245F1553002A3010 /* Common */,
 			);
 			path = MEKit;
+			sourceTree = "<group>";
+		};
+		6EDC9F532460719C00534F5D /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				6EDC9F5724607B2800534F5D /* CoreData.stencil */,
+				6EDC9F5624607B1800534F5D /* swiftgen.yml */,
+				6E003ECE245F1836002A3010 /* RedditFeed.xcdatamodeld */,
+				6E003ED1245F19A9002A3010 /* CoreData.swift */,
+			);
+			name = "Core Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -378,6 +390,7 @@
 				6E715302245CBCBA0011ABDB /* FeedViewModel.swift in Sources */,
 				6E003ED7245F1A0C002A3010 /* CoreDataManager.swift in Sources */,
 				6E7152DA245CB8B20011ABDB /* SceneDelegate.swift in Sources */,
+				6EDC9F55246071D200534F5D /* RedditDataManager.swift in Sources */,
 				6E7152DC245CB8B20011ABDB /* FeedViewController.swift in Sources */,
 				6E003EB3245F152E002A3010 /* TableViewLoadNextPageView.swift in Sources */,
 				6E7152DE245CB8B20011ABDB /* FeedItemWebViewViewController.swift in Sources */,
@@ -386,7 +399,6 @@
 				6E003EDD245F30D8002A3010 /* Date+Extensions.swift in Sources */,
 				6E003EE2245F7D04002A3010 /* FeedItemImageViewController.swift in Sources */,
 				6E003ED8245F1A0C002A3010 /* NSManagedObject+Extension.swift in Sources */,
-				6E003EC7245F15D8002A3010 /* Formatter.swift in Sources */,
 				6E003EBD245F154C002A3010 /* URL+sha256Hash.swift in Sources */,
 				6E003EB5245F1536002A3010 /* MessagePresenter.swift in Sources */,
 				6E003EB8245F153E002A3010 /* APIService.swift in Sources */,

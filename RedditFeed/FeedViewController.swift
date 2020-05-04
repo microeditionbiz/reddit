@@ -28,6 +28,9 @@ class FeedViewController: UIViewController, MessagePresenter {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        title = NSLocalizedString("Top", comment: "")
+        
         configureLoadNextPageView()
         configureRefreshControl()
         
@@ -55,6 +58,12 @@ class FeedViewController: UIViewController, MessagePresenter {
         tableView.refreshControl = refreshControl
     }
     
+    fileprivate func updateUI() {
+        guard isViewLoaded else { return }
+        tableView.refreshControl?.endRefreshing()
+        tableView.reloadData()
+    }
+    
     @objc func refreshControlAction(_ sender: AnyObject) {
         viewModel.fetch()
     }
@@ -66,10 +75,11 @@ class FeedViewController: UIViewController, MessagePresenter {
 extension FeedViewController: FeedViewModelDelegate {
     
     func update(viewModel: FeedViewModelProtocol) {
-        tableView.reloadData()
+        updateUI()
     }
     
     func updateError(viewModel: FeedViewModelProtocol, error: Error) {
+        tableView.refreshControl?.endRefreshing()
         presentAlert(withError: error)
     }
     
@@ -86,7 +96,8 @@ extension FeedViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FeedCell.self), for: indexPath) as! FeedCell
-        cell.configure(with: viewModel.items[indexPath.row])
+        let item = viewModel.items[indexPath.row]
+        cell.configure(with: item)
         return cell
     }
  

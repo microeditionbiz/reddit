@@ -34,8 +34,8 @@ class FeedCoordinator: Coordinator {
 
     func createFeedVC() -> UINavigationController {
         let feedViewController = storyboard.instantiateViewController(identifier: String(describing: FeedViewController.self)) as! FeedViewController
-             feedViewController.delegate = self
-             feedViewController.viewModel = ctx.newFeedViewModel()
+        feedViewController.delegate = self
+        feedViewController.viewModel = ctx.newFeedViewModel()
         return UINavigationController(rootViewController: feedViewController)
     }
     

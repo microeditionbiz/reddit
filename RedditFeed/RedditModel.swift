@@ -13,7 +13,8 @@ typealias Payload = [String: Any]
 typealias List = [Payload]
 
 struct TopResponse: APIResponseBase {
-    fileprivate(set) var afterIdentifier: String?
+    let afterIdentifier: String?
+    var managedObjectIDs: [NSManagedObjectID]!
     
     init(_ data: Data) throws {
         guard let payload = try JSONSerialization.jsonObject(with: data) as? Payload , let dataPayload = payload["data"] as? Payload, let childrenList = dataPayload["children"] as? List else {
@@ -22,14 +23,17 @@ struct TopResponse: APIResponseBase {
         
         self.afterIdentifier = dataPayload["after"] as? String
         
-        let context = CoreDataManager.newBackgroundContext()
-        childrenList.forEach { childPayload in
-            if let childDataPayload = childPayload["data"] as? Payload {
-                FeedItem.object(form: childDataPayload, in: context)
+        CoreDataManager.performAndWaitBackgroundTask { context in
+            let managedObjects: [FeedItem] = childrenList.compactMap { childPayload in
+                guard let childDataPayload = childPayload["data"] as? Payload else { return nil }
+                return FeedItem.object(form: childDataPayload, in: context)
             }
+            
+            try? context.obtainPermanentIDs(for: managedObjects)
+            self.managedObjectIDs = managedObjects.map(\.objectID)
+            
+            CoreDataManager.save(context: context)
         }
-        
-        CoreDataManager.save(context: context)
     }
 }
 

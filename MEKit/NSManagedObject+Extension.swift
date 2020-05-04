@@ -91,16 +91,22 @@ extension NSManagedObject {
         }
     }
     
-    static func fetchObjects<T: NSManagedObject>(_ type: T.Type, where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [T]? {
+    static func fetchObjects<T: NSManagedObject>(_ type: T.Type, where predicate: NSPredicate? = nil, sortDescriptors: [NSSortDescriptor]? = nil, offset: Int = 0, limit: Int? = nil, batchSize: Int? = nil, in context: NSManagedObjectContext) -> [T] {
         
         let fetchRequest = Self.fetchRequest(resultOf: Self.self, where: predicate, sortDescriptors: sortDescriptors, offset: offset, limit: limit, batchSize: batchSize)
         
         do {
-            return try context.fetch(fetchRequest) as? [T]
+            return try context.fetch(fetchRequest) as? [T] ?? []
         } catch {
             let nserror = error as NSError
             assertionFailure("Unresolved error \(nserror), \(nserror.userInfo)")
-            return nil
+            return []
+        }
+    }
+    
+    static func fetchObjects<T: NSManagedObject>(_ type: T.Type, withObjectIDs objectIDs: [NSManagedObjectID], in context: NSManagedObjectContext) -> [T] {
+        return objectIDs.compactMap { objectID in
+            return context.object(with: objectID) as? T
         }
     }
       
@@ -173,8 +179,7 @@ extension NSManagedObject {
     // MARK: - Delete
 
     static func delete(where predicate: NSPredicate? = nil, in context: NSManagedObjectContext) {
-        let objects = Self.fetchObjects(Self.self, where: predicate, in: context)
-        objects?.forEach({ $0.delete() })
+        Self.fetchObjects(Self.self, where: predicate, in: context).forEach({ $0.delete() })
     }
     
     func delete() {

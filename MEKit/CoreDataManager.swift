@@ -9,11 +9,6 @@
 import Foundation
 import CoreData
 
-public extension CodingUserInfoKey {
-    // Helper property to retrieve the context
-    static let managedObjectContext = CodingUserInfoKey(rawValue: "managedObjectContext")
-}
-
 public final class CoreDataManager {
     private(set) static var containerName: String!
     private(set) static var modelName: String? // "Model.momd/Model.mom"
@@ -51,7 +46,6 @@ public final class CoreDataManager {
             }
         }
         
-        //TODO: Do I need this?
         container.viewContext.automaticallyMergesChangesFromParent = true
         
         self.persistentContainer = container
