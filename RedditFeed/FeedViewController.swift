@@ -117,9 +117,9 @@ class FeedDiffableDataSource: UITableViewDiffableDataSource<FeedDiffableDataSour
     
     func update(items: [FeedItemViewModel]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FeedItemViewModel>()
-         snapshot.appendSections([.main])
-         snapshot.appendItems(items, toSection: .main)
-         self.apply(snapshot, animatingDifferences: true)
+        snapshot.appendSections([.main])
+        snapshot.appendItems(items, toSection: .main)
+        self.apply(snapshot, animatingDifferences: true)
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
